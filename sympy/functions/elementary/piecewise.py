@@ -97,6 +97,9 @@ class Piecewise(Function):
             cond = pair.cond
             if cond is False:
                 continue
+            if isinstance(cond, Piecewise):
+                cond = Or(*[And(c, e) for (e, c) in cond.args])
+                pair = ExprCondPair(pair.expr, cond)
             if not isinstance(cond, (bool, Relational, Boolean)):
                 raise TypeError(
                     "Cond %s is of type %s, but must be a Relational,"
