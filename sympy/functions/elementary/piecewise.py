@@ -432,7 +432,6 @@ class Piecewise(Function):
         from sympy import checksol, solve
         args = list(self.args)
         for i, (e, c) in enumerate(args):
-
             if isinstance(c, bool):
                 pass
             elif isinstance(c, Basic):
@@ -441,18 +440,6 @@ class Piecewise(Function):
                 if checksol(c, {}, minimal=True):
                     # the equality is trivially solved
                     c = True
-                else:
-                    # try to solve the equality
-                    try:
-                        slns = solve(c, dict=True)
-                        if not slns:
-                            c = False
-                        elif len(slns) == 1:
-                            c = And(*[Equality(key, value)
-                                      for key, value in slns[0].iteritems()])
-                    except NotImplementedError:
-                        pass
-
             if not c is False:
                 e = e._subs(old, new)
             args[i] = e, c
